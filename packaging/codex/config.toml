@@ -1,0 +1,15 @@
+# MaxoPerf MCP server — append this block to ~/.codex/config.toml
+#
+# Codex consumes remote Streamable-HTTP MCP servers directly (no extension/deeplink mechanism).
+# Set MAXOPERF_API_KEY in your shell environment first (Console -> Settings -> API keys).
+#
+# Server URL is the subtask-03 SSOT (`packaging/mcp/ssot.mjs`, derived from
+# `deploy/helm/maxoperf/values-prod.yaml` publicWebOrigin) — do not hand-edit if it changes upstream.
+
+[mcp_servers.maxoperf]
+url = "https://app.maxoperf.com/mcp"
+bearer_token_env_var = "MAXOPERF_API_KEY"
+
+# `bearer_token_env_var` (verified via developers.openai.com/codex/mcp + config-reference,
+# 2026-07-09) tells Codex to read MAXOPERF_API_KEY from your shell environment and send it as
+# `Authorization: Bearer <token>` — never hard-code your key as a literal in this file.

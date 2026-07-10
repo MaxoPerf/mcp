@@ -1,0 +1,31 @@
+{
+  "name": "maxoperf",
+  "description": "MaxoPerf load & browser performance testing \u2014 bundles the remote MaxoPerf MCP server connector and the maxoperf agent skill (turn \"I have an app\" into a real, running test). Skill also stands alone at github.com/MaxoPerf/agent-skill.",
+  "version": "1.0.0",
+  "author": {
+    "name": "MaxoPerf",
+    "email": "support@maxoperf.com"
+  },
+  "homepage": "https://maxoperf.com",
+  "repository": "https://github.com/MaxoPerf/mcp",
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "load-testing",
+    "performance-testing",
+    "browser-testing",
+    "mcp",
+    "observability"
+  ],
+  "mcpServers": {
+    "maxoperf": {
+      "type": "http",
+      "url": "https://app.maxoperf.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${MAXOPERF_API_KEY}"
+      }
+    }
+  },
+  "skills": [
+    "./agent-skill"
+  ]
+}

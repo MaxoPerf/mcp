@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "maxoperf",
+  "owner": {
+    "name": "MaxoPerf",
+    "url": "https://maxoperf.com"
+  },
+  "metadata": {
+    "description": "Load & browser performance testing for AI agents — install the MaxoPerf MCP server + agent skill from one marketplace entry."
+  },
+  "plugins": [
+    {
+      "name": "maxoperf",
+      "source": "./",
+      "description": "MaxoPerf MCP server (remote) + the maxoperf agent skill — turn \"I have an app\" into a real, running load/browser test from your AI agent.",
+      "version": "1.0.0"
+    }
+  ]
+}

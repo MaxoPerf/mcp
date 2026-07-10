@@ -1,0 +1,19 @@
+{
+  "servers": {
+    "maxoperf": {
+      "type": "http",
+      "url": "https://app.maxoperf.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:maxoperf-api-key}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "maxoperf-api-key",
+      "description": "MaxoPerf API key (Console -> Settings -> API keys)",
+      "password": true
+    }
+  ]
+}

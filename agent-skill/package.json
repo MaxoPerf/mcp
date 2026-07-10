@@ -1,0 +1,43 @@
+{
+  "name": "@maxoperf/agent-skill",
+  "version": "0.1.0",
+  "description": "Shippable customer-facing MaxoPerf agent skill — markdown workflow + MCP tool bindings, installed into a customer's own IDE agent (Claude Code / Cursor / Codex).",
+  "keywords": [
+    "maxoperf",
+    "load-testing",
+    "performance-testing",
+    "mcp",
+    "agent-skill",
+    "k6",
+    "playwright"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://maxoperf.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MaxoPerf/agent-skill.git"
+  },
+  "bin": {
+    "maxoperf-agent-skill": "install/installer.mjs"
+  },
+  "files": [
+    "README.md",
+    "SKILL.md",
+    "reference/",
+    "install/",
+    "scripts/lint-markdown.mjs"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "lint": "node scripts/lint-markdown.mjs"
+  },
+  "devDependencies": {
+    "@maxoperf/test-config": "workspace:*",
+    "@types/node": "^22.14.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
+  }
+}

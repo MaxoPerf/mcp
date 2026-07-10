@@ -1,0 +1,53 @@
+{
+  "manifest_version": "0.3",
+  "name": "maxoperf",
+  "display_name": "MaxoPerf",
+  "version": "1.0.0",
+  "description": "Load & browser performance testing — drive MaxoPerf runs from Claude Desktop with your own API key.",
+  "long_description": "MaxoPerf is a hosted load- and browser-performance-testing platform. This extension bridges Claude Desktop to the remote MaxoPerf MCP server at https://app.maxoperf.com/mcp via the standard `mcp-remote` stdio-to-HTTP adapter, so Claude can run tests, fetch results, and analyze hotspots on your behalf. Requires a MaxoPerf API key (Console -> Settings -> API keys).",
+  "author": {
+    "name": "MaxoPerf",
+    "email": "support@maxoperf.com",
+    "url": "https://maxoperf.com"
+  },
+  "homepage": "https://maxoperf.com",
+  "documentation": "https://maxoperf.com/docs",
+  "support": "https://maxoperf.com/support",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxoperf/mcp"
+  },
+  "keywords": ["load-testing", "performance-testing", "browser-testing", "observability"],
+  "license": "SEE LICENSE IN LICENSE",
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "MaxoPerf API key",
+      "description": "Bearer token for the MaxoPerf MCP server (Console -> Settings -> API keys). Never stored outside your local Claude Desktop config.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/shim.js",
+    "mcp_config": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://app.maxoperf.com/mcp",
+        "--header",
+        "Authorization:Bearer ${user_config.api_key}"
+      ]
+    }
+  },
+  "_meta": {
+    "io.maxoperf/packaging": {
+      "note": "manifest_version 0.3 has no native remote-server type (Anthropic guidance: MCPB is the secondary, local/stdio distribution path; remote connectors are recommended for hosted servers). This bundle wraps our remote Streamable-HTTP server with the widely-used `mcp-remote` stdio<->HTTP adapter so Claude Desktop can still one-click install it. `server/shim.js` is a placeholder entry_point satisfying the manifest's `type: node` requirement — the actual command run is `npx -y mcp-remote ...` per mcp_config above.",
+      "sourceOfTruth": "packaging/mcp/ssot.mjs",
+      "schemaVerifiedAt": "2026-07-09",
+      "schemaVersion": "0.3"
+    }
+  }
+}

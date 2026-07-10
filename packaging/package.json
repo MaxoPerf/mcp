@@ -1,0 +1,14 @@
+{
+  "name": "@maxoperf/packaging",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Marketplace packaging + MCP Registry listing manifests (TASK-1095 / SUBTASK-10) — server.json, Claude Code plugin, .mcpb bundle, VS Code/Cursor deeplinks, Codex/ChatGPT configs, and the manifest validity/SSOT/secret-leak tests.",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
+  }
+}
