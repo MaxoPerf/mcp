@@ -55,7 +55,7 @@ function copyRecursive(src, dest) {
   }
 }
 
-/** Writes (or merges into) the client's MCP config with the maxoperf server entry. */
+/** Writes (or merges into) the client's MCP config with the MaxoPerf server entry. */
 function writeClientConfig(client, apiKeyEnvName) {
   if (client === 'cursor') {
     const configPath = join(process.cwd(), '.cursor', 'mcp.json');
@@ -90,7 +90,7 @@ function install(args) {
   const targetDir = args.target ?? CLIENT_SKILL_DIRS[args.client]?.() ?? CLIENT_SKILL_DIRS['claude-code']();
   copyRecursive(join(BUNDLE_ROOT, 'reference'), join(targetDir, 'reference'));
   copyFileSync(join(BUNDLE_ROOT, 'SKILL.md'), join(targetDir, 'SKILL.md'));
-  console.log(`Installed maxoperf skill (SKILL.md + reference/) to: ${targetDir}`);
+  console.log(`Installed MaxoPerf skill (SKILL.md + reference/) to: ${targetDir}`);
 
   const apiKeyEnvName = 'MAXOPERF_API_KEY';
   if (process.env[apiKeyEnvName]) {

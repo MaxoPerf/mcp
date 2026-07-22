@@ -35,7 +35,9 @@ Ask, in this order, skipping any the user has already answered unprompted:
 
 1. "What do you want to test?" (a specific API endpoint/flow, a whole user journey, a browser page,
    etc.) — or offer the hotspot scan (Step 1) if they're not sure yet.
-2. "What's the target — a URL, or is it running locally / not yet deployed?"
+2. "What's the target — a URL, or is it running locally / not yet deployed?" If it's local/not yet
+   deployed, offer a reverse tunnel (`create_tunnel`) so the runner can reach it — see
+   `reference/platform-features.md`.
 3. "Roughly how much load? (e.g. 'like our normal traffic', 'find the breaking point', or give a
    number like 50 concurrent users)." You will translate the answer into `loadProfile` fields later
    — never ask the user to speak in `virtualUsers`/`agentCount` jargon directly.
@@ -63,7 +65,12 @@ skill's `choose-executor` MCP prompt encodes the same logic for chat-only client
 
 - API/protocol target → `k6` (default) or `jmeter` if the user already has a JMX asset.
 - Browser/UI journey target → `playwright` (default) or `selenium` if the user already has a
-  Selenium asset.
+  Selenium asset. **Read `reference/browser-tests.md` before building any
+  browser test** — every supported script shape (Playwright spec / library / un-awaited IIFE,
+  Selenium test-function / bare `__main__` script, interactive scriptless), how
+  `chrome`/`edge`/`firefox` are selected, what a healthy run must produce, and the traps that
+  each shipped as a real bug. Upload the user's script AS-IS — the platform wraps whatever
+  shape it is. Never ask them to restructure it.
 - Any other existing asset (Gatling `.scala`, Locust `locustfile.py`, JMeter `.jmx`, `.side`
   recording) → reuse it as-is with the matching executor; don't rebuild from scratch.
 
@@ -86,6 +93,14 @@ Write the actual script file (e.g. a `.k6.js` or Playwright `.ts`) into the user
 - Any supporting data (CSV fixtures, extra config) as separate files you will upload with
   `role: "test_asset"`; the main script gets `role: "entrypoint"`.
 
+**Browser tests — upload the user's script AS-IS** (`reference/browser-tests.md`). Every shape is
+supported: a Playwright spec, a bare `playwright` library script, an un-awaited
+`(async () => { … })()` IIFE, a Selenium script with only an `if __name__ == '__main__':` guard.
+Do NOT "helpfully" rewrite it into a test-function shape, strip `headless: true`, or add
+`--no-sandbox` — the platform wraps the shape and the runner handles the rest, and each of those
+"fixes" breaks something. Do NOT promise `.side` files or TypeScript *Selenium* scripts; those
+genuinely do not run — say so and offer a Selenium Python export or the interactive builder.
+
 Show the user the script before uploading it, briefly, so they can sanity-check it.
 
 ### Step 4 — Create, upload, run
@@ -93,7 +108,15 @@ Show the user the script before uploading it, briefly, so they can sanity-check 
 Drive the MCP tools in this exact sequence (see `reference/mcp-tools.md` for full arg shapes):
 
 1. `list_projects` — find or confirm the target project; `create_project` if none fits.
-2. `create_test { project_id, name, engine_kind }` — create the test shell.
+2. `create_test { project_id, name, engine_kind, managed_regions, cloud_provider?, virtual_users, duration_seconds }`
+   — create the test shell. A `single` test **must** say where it runs and how much load it drives:
+   pass `managed_regions` (e.g. `["us-east-1"]`) or a `private_datacenter_id`. **Always use a real
+   region id from `/v1/execution-locations`** — never invent one. Each managed region belongs to one
+   cloud (`aws`|`gcp`|`azure`); pass `cloud_provider` to pin it, otherwise the server resolves the
+   provider from the region catalog. A managed location that does not resolve to a concrete provider
+   cannot allocate runners, so a bad region id leaves the run stuck. `managed_regions` requires
+   `virtual_users` + `duration_seconds` alongside it — the API rejects a location plan with no load
+   profile, and rejects a test with no location at all (it could never be run).
 3. `upload_test_file { test_id, filename, content, role: "entrypoint" }` — upload the main script;
    repeat with `role: "test_asset"` for any supporting files.
 4. `list_test_files { test_id }` — confirm the upload(s) are `ready`.
@@ -186,6 +209,34 @@ anomaly method's false-positive controls.
   anomalies from a non-terminal run as a final finding.
 - **Always include the console deep link** (`<console origin>/runs/<runId>`) alongside any RCA or
   anomaly finding, same as Step 8 — the user can always break out to the full charts/error viewer.
+
+## Reverse tunnels (expose a local port on a public URL)
+
+Separate from load testing: MaxoPerf also gives a local service a public, TLS-terminated
+`https://tunnel-<name>.maxoperf.com` URL (like ngrok, free). Use this when the user wants to share
+a local app, receive a webhook locally, or make a not-yet-deployed target reachable so they can then
+test it. The MCP tunnel tools are documented in `reference/mcp-tools.md` — never guess their names.
+
+- **Authenticated (named) tunnel:** `create_tunnel { name, … }` → returns the public URL and a
+  **one-time** `clientToken` + a ready-to-run `runCommand`. Have the user run it:
+  `npx @maxoperf/tunnel http <port> --token <clientToken>`. Then `get_tunnel` / `list_tunnels` to see
+  status (online once the client connects), `get_tunnel_stats` for traffic, `stop_tunnel` to stop.
+- **Guest tunnel (zero signup):** the CLI with no token — `npx @maxoperf/tunnel http 3000` — provisions
+  an anonymous tunnel with a stable auto-generated subdomain reused across runs. Suggest this when the
+  user has no account / API key yet and just wants a URL fast; mention that signing up unlocks named
+  subdomains, more tunnels, and access controls.
+- **Token hygiene:** the `clientToken` is shown only once — never echo it back after the first display,
+  and only ever place it in the CLI `--token` flag.
+
+### Platform features beyond this loop
+
+Beyond reverse tunnels (above), three more MCP-exposed platform capabilities sit alongside
+build→upload→run: managed **browser fleets** (raw parallel real-browser capacity the user drives
+themselves, not a MaxoPerf test), **virtual services** (mock/simulate a target's dependency), and
+**PDCs**/execution locations (where any of those physically run) plus on-demand **browser
+inspection** (`inspect_url`, for JS-rendered pages `read_page_dom` can't see). Reach for these
+during intake/setup, not instead of the test loop — see `reference/platform-features.md` for the
+decision table and `reference/mcp-tools.md` for exact args.
 
 ## Non-negotiables (never violate these)
 

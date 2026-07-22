@@ -24,7 +24,7 @@ Current deeplink (`https://app.maxoperf.com/mcp`, derived from
 `deploy/helm/maxoperf/values-prod.yaml` `publicWebOrigin`):
 
 ```
-cursor://anysphere.cursor-deeplink/mcp/install?name=maxoperf&config=eyJ1cmwiOiJodHRwczovL2FwcC5tYXhvcGVyZi5jb20vbWNwIiwiaGVhZGVycyI6eyJBdXRob3JpemF0aW9uIjoiQmVhcmVyIFlPVVJfTUFYT1BFUkZfQVBJX0tFWSJ9fQ==
+cursor://anysphere.cursor-deeplink/mcp/install?name=MaxoPerf&config=eyJ1cmwiOiJodHRwczovL2FwcC5tYXhvcGVyZi5jb20vbWNwIiwiaGVhZGVycyI6eyJBdXRob3JpemF0aW9uIjoiQmVhcmVyIFlPVVJfTUFYT1BFUkZfQVBJX0tFWSJ9fQ==
 ```
 
 Decoded `config`:
@@ -39,7 +39,7 @@ Decoded `config`:
 Markdown install badge:
 
 ```markdown
-[![Add to Cursor](https://img.shields.io/badge/Cursor-Add_MaxoPerf_MCP-000000)](cursor://anysphere.cursor-deeplink/mcp/install?name=maxoperf&config=eyJ1cmwiOiJodHRwczovL2FwcC5tYXhvcGVyZi5jb20vbWNwIiwiaGVhZGVycyI6eyJBdXRob3JpemF0aW9uIjoiQmVhcmVyIFlPVVJfTUFYT1BFUkZfQVBJX0tFWSJ9fQ==)
+[![Add to Cursor](https://img.shields.io/badge/Cursor-Add_MaxoPerf_MCP-000000)](cursor://anysphere.cursor-deeplink/mcp/install?name=MaxoPerf&config=eyJ1cmwiOiJodHRwczovL2FwcC5tYXhvcGVyZi5jb20vbWNwIiwiaGVhZGVycyI6eyJBdXRob3JpemF0aW9uIjoiQmVhcmVyIFlPVVJfTUFYT1BFUkZfQVBJX0tFWSJ9fQ==)
 ```
 
 ## Manual install

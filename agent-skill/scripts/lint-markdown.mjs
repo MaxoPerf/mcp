@@ -13,9 +13,11 @@ const ROOT = join(__dirname, '..');
 
 const REQUIRED_FILES = [
   'SKILL.md',
+  'reference/browser-tests.md',
   'reference/engines.md',
   'reference/hotspot-patterns.md',
   'reference/mcp-tools.md',
+  'reference/platform-features.md',
   'install/claude-code.md',
   'install/cursor.md',
   'install/claude-desktop.md',
